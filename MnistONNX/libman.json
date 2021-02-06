@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "drawingboard.js@0.4.6",
+      "destination": "wwwroot/js/drawingboard.js/"
+    }
+  ]
+}

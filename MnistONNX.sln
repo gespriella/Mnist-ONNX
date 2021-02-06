@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MnistONNX", "MnistONNX\MnistONNX.csproj", "{92D054B3-12AE-4247-AFCA-118716130A0C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92D054B3-12AE-4247-AFCA-118716130A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92D054B3-12AE-4247-AFCA-118716130A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92D054B3-12AE-4247-AFCA-118716130A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92D054B3-12AE-4247-AFCA-118716130A0C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCC829E3-7B22-494C-8DF9-780580309154}
+	EndGlobalSection
+EndGlobal
