@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Mnist ONNX";
 }
-@section Styles{ 
+@section Styles{
     <link href="~/js/drawingboard.js/drawingboard.css" rel="stylesheet" />
     <style>
         #drawing-board {
@@ -10,12 +10,36 @@
         }
     </style>
 }
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
+    <label class="btn btn-outline-primary active">
+        <input type="radio" name="algorithm" id="algorithmLR" onchange="updatePrediction()" data-url="lr" checked> Logistic Regression
+    </label>
+    <label class="btn btn-outline-primary">
+        <input type="radio" name="algorithm" id="algorithmKNN" onchange="updatePrediction()" data-url="knn"> KNeighbors
+    </label>
+    <label class="btn btn-outline-primary">
+        <input type="radio" name="algorithm" id="algorithmRF" onchange="updatePrediction()" data-url="rf"> Random Forest
+    </label>
+    <label class="btn btn-outline-primary">
+        <input type="radio" name="algorithm" id="algorithmET" onchange="updatePrediction()" data-url="et"> Extra Trees
+    </label>
+</div>
+&nbsp;&nbsp;&nbsp;
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
+    <label class="btn btn-outline-info active">
+        <input type="radio" name="source" id="sourceONNX" onchange="updatePrediction()" data-url="/Home/PredictMNIST?alg=" checked> ONNX (C#)
+    </label>
+    <label class="btn btn-outline-info">
+        <input type="radio" name="source" id="sourcePICKLE" onchange="updatePrediction()" data-url="http://127.0.0.1:5500/predict?alg="> PICKLE (Python Web Service)
+    </label>
+</div>
+
 <div class="row">
     <div class="col-md-8">
         <h2>Draw a number</h2>
         <div id="drawing-board"></div>
     </div>
-    <div class="col-md-4"> 
+    <div class="col-md-4">
         <h2>Results</h2>
         <form role="form">
             <div class="form-group">
@@ -34,49 +58,53 @@
     </div>
 </div>
 @section Scripts{
-<script src="~/js/drawingboard.js/drawingboard.js"></script>
-<script type="text/javascript">
-    let drawingBoard = new DrawingBoard.Board('drawing-board', {
-        size: 20
-    });
-    drawingBoard.ev.bind('board:stopDrawing', stoppedDrawing);
-    function stoppedDrawing() {
-        let canvas = $(".drawing-board-canvas")[0];
-        let scaledCanvas = document.createElement('canvas');
-        let scaledContext = scaledCanvas.getContext('2d');
-        scaledCanvas.width = canvas.width * 0.07;
-        scaledCanvas.height = canvas.height * 0.07;
-        scaledContext.scale(0.07, 0.07);
-        scaledContext.drawImage(canvas, 0, 0);
-        let imageData = scaledContext.getImageData(0, 0, scaledCanvas.width, scaledCanvas.height);
-        let imageBytes = [];
-        for (let y = 0; y < imageData.height; y++) {
-            for (let x = 0; x < imageData.width; x++) {
-                let i = (y * 4) * imageData.width + x * 4;
-                let avg = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
-                imageBytes.push(255-avg);
-            }
-        }
-        $.ajax({
-            method: "POST",
-            url: "/Home/PredictMNIST",
-            data: { "imageBytes": imageBytes },
-            success: function (data) {
-                document.getElementById("predicted-number").innerHTML = `<h2>${data.prediction}</h2>`;
-                let strProbs = "";
-                for (var i = 0; i < data.probabilities.length; i++) {
-                    var prob = (data.probabilities[i] * 100).toFixed(2);
-                    strProbs += `<div>${i}: ${prob}%</div>
-                                 <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width:${prob}%"></div>
-                                 </div>`;
-                }
-                document.getElementById("probabilities").innerHTML = strProbs;                
-            },
-            error: function (request) {
-                alert(request.responseText);
-            }
+    <script src="~/js/drawingboard.js/drawingboard.js"></script>
+    <script type="text/javascript">
+        let drawingBoard = new DrawingBoard.Board("drawing-board", {
+            size: 20
         });
-    }
-</script>
+        drawingBoard.ev.bind("board:stopDrawing", updatePrediction);
+
+        function updatePrediction() {
+            let url = $('input[name="source"]:checked').attr("data-url") + $('input[name="algorithm"]:checked').attr("data-url");
+            let canvas = $(".drawing-board-canvas")[0];
+            let scaledCanvas = document.createElement("canvas");
+            let scaledContext = scaledCanvas.getContext("2d");
+            scaledCanvas.width = canvas.width * 0.07;
+            scaledCanvas.height = canvas.height * 0.07;
+            scaledContext.scale(0.07, 0.07);
+            scaledContext.drawImage(canvas, 0, 0);
+            let imageData = scaledContext.getImageData(0, 0, scaledCanvas.width, scaledCanvas.height);
+            let imageBytes = [];
+            for (let y = 0; y < imageData.height; y++) {
+                for (let x = 0; x < imageData.width; x++) {
+                    let i = (y * 4) * imageData.width + x * 4;
+                    let avg = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
+                    imageBytes.push(255 - Math.round(avg));
+                }
+            }
+
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: JSON.stringify(imageBytes),
+                dataType: "json", contentType: "application/json",
+                success: function (data) {
+                    document.getElementById("predicted-number").innerHTML = `<h2>${data.prediction}</h2>`;
+                    let strProbs = "";
+                    for (let i = 0; i < data.probabilities.length; i++) {
+                        let prob = (data.probabilities[i] * 100).toFixed(2);
+                        strProbs += `<div>${i}: ${prob}%</div>
+                                                     <div class="progress">
+                                                        <div class="progress-bar" role="progressbar" style="width:${prob}%"></div>
+                                                     </div>`;
+                    }
+                    document.getElementById("probabilities").innerHTML = strProbs;
+                },
+                error: function (request) {
+                    alert(request.responseText);
+                }
+            });
+        }
+    </script>
 }

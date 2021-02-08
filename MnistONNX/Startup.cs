@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.ML.OnnxRuntime;
-
+using System.Collections.Generic;
 
 namespace MnistONNX
 {
@@ -21,8 +21,13 @@ namespace MnistONNX
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            var session = new InferenceSession("MnistLR.onnx");
-            services.AddSingleton(session);
+            Dictionary<string, InferenceSession> inferenceSessions = new Dictionary<string, InferenceSession>();
+            inferenceSessions.Add("lr", new InferenceSession("MnistLR.onnx"));
+            inferenceSessions.Add("knn", new InferenceSession("MnistKNN.onnx"));
+            inferenceSessions.Add("rf", new InferenceSession("MnistRF.onnx"));
+            inferenceSessions.Add("et", new InferenceSession("MnistET.onnx"));
+
+            services.AddSingleton(inferenceSessions);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

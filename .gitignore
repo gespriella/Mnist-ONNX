@@ -338,3 +338,9 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/MnistONNX/MnistET.onnx
+/MnistONNX/MnistET.pkl
+/MnistONNX/MnistKNN.onnx
+/MnistONNX/MnistKNN.pkl
+/MnistONNX/MnistRF.onnx
+/MnistONNX/MnistRF.pkl
