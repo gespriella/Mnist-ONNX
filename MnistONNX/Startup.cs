@@ -17,20 +17,19 @@ namespace MnistONNX
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            Dictionary<string, InferenceSession> inferenceSessions = new Dictionary<string, InferenceSession>();
-            inferenceSessions.Add("lr", new InferenceSession("MnistLR.onnx"));
-            inferenceSessions.Add("knn", new InferenceSession("MnistKNN.onnx"));
-            inferenceSessions.Add("rf", new InferenceSession("MnistRF.onnx"));
-            inferenceSessions.Add("et", new InferenceSession("MnistET.onnx"));
+            Dictionary<string, InferenceSession> inferenceSessions = new Dictionary<string, InferenceSession>{
+                { "lr", new InferenceSession("MnistLR.onnx") },
+                { "knn", new InferenceSession("MnistKNN.onnx") },
+                { "rf", new InferenceSession("MnistRF.onnx") },
+                { "et", new InferenceSession("MnistET.onnx") }
+            };
 
             services.AddSingleton(inferenceSessions);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

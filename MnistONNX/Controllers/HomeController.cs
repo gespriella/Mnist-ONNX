@@ -27,11 +27,6 @@ namespace MnistONNX.Controllers
                 .First().AsDictionary<long, float>().Values.ToArray();
             var WrappedReturn = new { prediction = pred, probabilities = probs };
 
-            /*** For debugging the array ***/
-            //string strArrayOfFloats="";
-            //foreach (var item in floatArray){strArrayOfFloats += $"{item},";}
-            //Console.Write("[" + strArrayOfFloats + "]");
-
             return Json(WrappedReturn);
         }
 
