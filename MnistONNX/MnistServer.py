@@ -32,4 +32,4 @@ def predict():
     response = {'prediction': int(prediction),'probabilities':probabilities[0].tolist()}
     return flask.jsonify(response)
 
-app.run(host='127.0.0.1', port=5500)
+app.run(host='localhost', port=5500)

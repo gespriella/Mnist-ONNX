@@ -10,7 +10,7 @@ namespace MnistONNX.Controllers
     public class HomeController : Controller
     {
         private Dictionary<string, InferenceSession> _inferenceSessions;
-        public HomeController(Dictionary<string, InferenceSession> inferenceSessions)
+        public HomeController(Dictionary<string, InferenceSession> inferenceSessions) 
         {
             _inferenceSessions = inferenceSessions;
         }
@@ -26,11 +26,6 @@ namespace MnistONNX.Controllers
             var probs = results[1].AsEnumerable<NamedOnnxValue>()
                 .First().AsDictionary<long, float>().Values.ToArray();
             var WrappedReturn = new { prediction = pred, probabilities = probs };
-
-            /*** For debugging the array ***/
-            //string strArrayOfFloats="";
-            //foreach (var item in floatArray){strArrayOfFloats += $"{item},";}
-            //Console.Write("[" + strArrayOfFloats + "]");
 
             return Json(WrappedReturn);
         }
