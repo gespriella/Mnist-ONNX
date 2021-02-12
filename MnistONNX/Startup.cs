@@ -24,7 +24,8 @@ namespace MnistONNX
                 { "lr", new InferenceSession("MnistLR.onnx") },
                 { "knn", new InferenceSession("MnistKNN.onnx") },
                 { "rf", new InferenceSession("MnistRF.onnx") },
-                { "et", new InferenceSession("MnistET.onnx") }
+                { "et", new InferenceSession("MnistET.onnx") },
+                { "cnn", new InferenceSession("MnistCNN.onnx") },
             };
 
             services.AddSingleton(inferenceSessions);

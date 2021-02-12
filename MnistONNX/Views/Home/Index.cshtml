@@ -23,11 +23,14 @@
     <label class="btn btn-outline-primary">
         <input type="radio" name="algorithm" id="algorithmET" onchange="updatePrediction()" data-url="et"> Extra Trees
     </label>
+    <label class="btn btn-outline-primary">
+        <input type="radio" name="algorithm" id="algorithmCNN" onchange="updatePrediction()" data-url="cnn"> Neural Net
+    </label>
 </div>
 &nbsp;&nbsp;&nbsp;
 <div class="btn-group btn-group-toggle" data-toggle="buttons">
     <label class="btn btn-outline-info active">
-        <input type="radio" name="source" id="sourceONNX" onchange="updatePrediction()" data-url="/Home/PredictMNIST?alg=" checked> ONNX (C#)
+        <input type="radio" name="source" id="sourceONNX" onchange="updatePrediction()" data-url="/Home/predict?alg=" checked> ONNX (C#)
     </label>
     <label class="btn btn-outline-info">
         <input type="radio" name="source" id="sourcePICKLE" onchange="updatePrediction()" data-url="http://localhost:5500/predict?alg="> PICKLE (Python Web Service)
