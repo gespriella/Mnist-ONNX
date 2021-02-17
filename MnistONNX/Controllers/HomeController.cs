@@ -19,13 +19,20 @@ namespace MnistONNX.Controllers
         public JsonResult predict(string alg,[FromBody] List<byte> imageBytes) {
             if (alg == "cnn") return predictCNN(imageBytes);
 
+            // Convert bytes to floats
             float[] floatArray = imageBytes.ConvertAll(x => Convert.ToSingle(x)).ToArray();
-            InferenceSession inferenceSession = _inferenceSessions[alg];
-            var tensor = new DenseTensor<float>(floatArray, inferenceSession.InputMetadata["input"].Dimensions);
-            var results = inferenceSession.Run(new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor("input", tensor) }).ToArray();
 
-            var pred = results[0].AsTensor<long>().ToArray()[0];
-            var probs = results[1].AsEnumerable<NamedOnnxValue>()
+            // Point to the correct Algorithm
+            InferenceSession inferenceSession = _inferenceSessions[alg];
+
+            // Create DenseTensor with correct dimensions
+            var tensor = new DenseTensor<float>(floatArray, inferenceSession.InputMetadata["input"].Dimensions);
+
+            // Run Prediction
+            var results = inferenceSession.Run(new List<NamedOnnxValue> { NamedOnnxValue.CreateFromTensor("input", tensor) }).ToArray(); 
+
+            var pred = results[0].AsTensor<long>().ToArray()[0]; // The prediction number
+            var probs = results[1].AsEnumerable<NamedOnnxValue>() // The probabilities array
                 .First().AsDictionary<long, float>().Values.ToArray();
             var WrappedReturn = new { prediction = pred, probabilities = probs };
 
